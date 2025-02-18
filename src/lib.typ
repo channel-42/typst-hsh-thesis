@@ -40,17 +40,7 @@
   set document(author: author, title: title)
   set page("a4")
 
-  set page(
-    margin: {
-      if enable-twoside {
-        (inside: 3.5cm, outside: 2cm, y: 3.75cm)
-      } else {
-        (x: 2cm, y: 3.75cm)
-      }
-    },
-  )
 
-  set par(justify: true)
   show table: set table.cell(align: left)
 
   set text(font: font, lang: language, size: font-size, hyphenate: false) // replaced this font: New Computer Modern
@@ -109,25 +99,41 @@
 
 
   // Title page.
+  set page(margin: (x: 2.5cm, y: 2cm))
   v(0.6fr)
-  align(left, image("Wortmarke.svg", width: 26%))
+  align(left, image("Wortmarke.svg", width: 20%))
   v(1.6fr)
 
 
   text(2em, weight: 700, title)
-  v(1.2em, weak: true)
-  text(author)
-  v(1.2em, weak: true)
-  text(subtitle)
-  v(1.2em, weak: true)
-  text(1.1em, date)
+  v(2em, weak: true)
+  text(1.3em, author)
+  v(1.5em, weak: true)
+  text(1.3em, subtitle)
+  v(3em, weak: true)
+  text(1.3em, date)
+  v(5em, weak: true)
 
-  align(right, image("Logo.svg", width: 26%))
+  align(
+    right + bottom, 
+    image("Logo.svg", width: 28%),
+    )
   pagebreak()
 
+  set par(justify: true)
+  // margin setup for all pages
+  set page(
+    margin: {
+      if enable-twoside {
+        (inside: 3.0cm, outside: 2.5cm, y: 4cm)
+      } else {
+        (x: 2.5cm, y: 4cm)
+      }
+    },
+  )
   // Author
   grid(
-    columns: (1fr, 4fr),
+    columns: (1.2fr, 4fr),
     rows: auto,
     row-gutter: 3em,
     gutter: 13pt,
