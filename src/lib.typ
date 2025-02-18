@@ -133,7 +133,7 @@
   )
   // Author
   grid(
-    columns: (1.2fr, 4fr),
+    columns: (1.5fr, 4fr),
     rows: auto,
     row-gutter: 3em,
     gutter: 13pt,
