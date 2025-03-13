@@ -1,3 +1,8 @@
+
+# 🚧 WIP 🚧
+This is a fork of the original `modern-hsh-thesis` template from [MrToWy
+](https://github.com/MrToWy/hsh-thesis). It is currently a work in progress and not yet ready for use. The instructions below are not up-to-date.
+
 # The `modern-hsh-thesis` Package
 <div align="center">Version 1.0.1</div>
 
