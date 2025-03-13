@@ -8,8 +8,11 @@
   if (top-level) {
     return hydra(1)
   }
-
   return hydra(2)
+}
+
+#let page-has-h1-heading() = {
+  return query(heading.where(level: 1)).filter(it => here().page() == it.location().page()).len() > 0
 }
 
 #show par: it => [#it <meta:content>]
@@ -48,19 +51,20 @@
 
 
   // heading size
-  show heading.where(level: 1): it => pad(bottom: 1em)[
-    #set text(2em)
+  show heading.where(level: 1): it => pad(bottom: 1.5em)[
+    #set text(1.8em)
+    #v(2.5em)
     #it
   ]
 
   // heading size
-  show heading.where(level: 2): it => pad(bottom: 0.4em, top: 0.4em)[
+  show heading.where(level: 2): it => pad(bottom: 0.5em, top: 0.8em)[
     #set text(1.3em)
     #it
   ]
 
   // heading size
-  show heading.where(level: 3): it => pad(bottom: 0.4em, top: 0.4em)[
+  show heading.where(level: 3): it => pad(bottom: 0.5em, top: 0.8em)[
     #set text(1.25em)
     #it
   ]
@@ -115,9 +119,9 @@
   v(5em, weak: true)
 
   align(
-    right + bottom, 
+    right + bottom,
     image("Logo.svg", width: 28%),
-    )
+  )
   pagebreak()
 
   set par(justify: true)
@@ -173,7 +177,7 @@
       it
     }
   }
-  outline(depth: 3, indent: true)
+  outline(depth: 3, indent: auto)
   pagebreak()
 
   set page(numbering: "I")
@@ -188,13 +192,13 @@
     outline(
       title: [List of Figures],
       target: figure.where(kind: image),
-      indent: true,
+      indent: auto,
     )
   }
 
   // List of Table
   if enable-lot {
-    // list of figures
+    pagebreak()
     {
       show heading: none
       heading[List of Tables]
@@ -202,7 +206,7 @@
     outline(
       title: [List of Tables],
       target: figure.where(kind: table),
-      indent: true,
+      indent: auto,
     )
   }
 
@@ -237,17 +241,15 @@
   set page(
     header: context {
       // dont print anything when the first element on the page is a level 1 heading
-      let chapter = hydra(1)
-
-      if (chapter == none) {
+      if page-has-h1-heading() {
         return
       }
 
       if enable-twoside {
         if calc.even(here().page()) {
-          align(left, smallcaps(get-current-heading-hydra(top-level: true)))
+          align(left, emph(get-current-heading-hydra(top-level: false)))
         } else {
-          align(right, emph(get-current-heading-hydra()))
+          align(right, emph(get-current-heading-hydra(top-level: true)))
         }
       } else {
         align(left, emph(get-current-heading-hydra()))
@@ -261,15 +263,31 @@
   // footer
   set page(
     footer: context {
-      small-line
+      // dont print a small-line on pages with a level 1 heading
+      if not page-has-h1-heading() {
+        small-line
+      }
+
       if enable-twoside {
         if calc.even(here().page()) {
-          align(left, counter(page).display("1"))
+          if not page-has-h1-heading() {
+          grid(
+            columns: 2,
+            gutter: 1fr,
+            align(left, counter(page).display("1")), align(right, text(author)),
+          )
+          } else {
+            align(left, counter(page).display("1"))
+          }
         } else {
           align(right, counter(page).display("1"))
         }
       } else {
-        align(left, counter(page).display("1"))
+        grid(
+          columns: 2,
+          gutter: 1fr,
+          align(left, counter(page).display("1")), align(right, author),
+        )
       }
     },
   )
@@ -295,7 +313,7 @@
   // Main body.
   set page(numbering: "1", number-align: center)
   counter(page).update(1)
-  set heading(numbering: "1.1.")
+  set heading(numbering: "1.1")
 
   body
 
@@ -305,7 +323,5 @@
   if bibliography != none {
     bibliography
   }
-
   hide("white page")
-
 }
