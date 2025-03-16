@@ -32,7 +32,9 @@
   enable-lof: false,
   enable-lot: false,
   enable-twoside: false,
-  bibliography: none,
+  enable-colored-links: false,
+  link-color: rgb("#005D7E"),
+  bib: none,
   chapter-break-mode: "default",
   language: "de",
   font: "Arial",
@@ -49,6 +51,23 @@
   set text(font: font, lang: language, size: font-size, hyphenate: false) // replaced this font: New Computer Modern
   show math.equation: set text(weight: 400)
 
+  // colored citations and references
+  show cite: it => {
+    // Only color the number, not the brackets.
+    show regex("\d+"): set text(fill: link-color) if enable-colored-links
+    it
+  }
+
+  show ref: it => {
+    if it.element == none {
+      // This is a citation, which is handled above.
+      return it
+    }
+
+    // Only color the number, not the supplement.
+    show regex("[\d.]+"): set text(fill: link-color) if enable-colored-links
+    it
+  }
 
   // heading size
   show heading.where(level: 1): it => pad(bottom: 1.5em)[
@@ -124,12 +143,16 @@
   )
   pagebreak()
 
+  if enable-twoside {
+    pagebreak()
+  }
+
   set par(justify: true)
   // margin setup for all pages
   set page(
     margin: {
       if enable-twoside {
-        (inside: 3.0cm, outside: 2.5cm, y: 4cm)
+        (inside: 3.5cm, outside: 2.0cm, y: 4cm)
       } else {
         (x: 2.5cm, y: 4cm)
       }
@@ -166,7 +189,9 @@
   ]
 
   pagebreak()
-
+  if enable-twoside {
+    pagebreak()
+  }
   // Table of contents.
   show outline.entry.where(level: 1): it => {
     if (it.element.has("level")) {
@@ -232,10 +257,18 @@
       #print-index(
         title: "Acronyms",
         outlined: true,
-      )
+      ) <acronyms>
 
     ]
   }
+
+  if enable-twoside {
+    pagebreak(to: "even")
+  }
+
+  // empty content block to store label for the start of the body
+  [#metadata("")#label("end-front-matter")]
+
 
   // header
   set page(
@@ -271,11 +304,11 @@
       if enable-twoside {
         if calc.even(here().page()) {
           if not page-has-h1-heading() {
-          grid(
-            columns: 2,
-            gutter: 1fr,
-            align(left, counter(page).display("1")), align(right, text(author)),
-          )
+            grid(
+              columns: 2,
+              gutter: 1fr,
+              align(left, counter(page).display("1")), align(right, text(author)),
+            )
           } else {
             align(left, counter(page).display("1"))
           }
@@ -317,11 +350,34 @@
 
   body
 
-  set page(header: none)
-
-  // bibliography
-  if bibliography != none {
-    bibliography
+  if (enable-twoside) {
+    pagebreak(to: "even")
   }
-  hide("white page")
+
+  // calculate page numbering for back matter
+  context {
+    counter(page).update(counter(page).at(<end-front-matter>).first())
+
+    set page(
+      header: none,
+      footer: context {
+        align(center, counter(page).display("I"))
+      },
+    )
+    set page(numbering: "I")
+
+    // bibliography
+    if bib != none {
+      show link: set text(fill: link-color) if enable-colored-links
+      show bibliography: it => {
+        show heading: it => {
+          set text(1.8em)
+          it.body
+        }
+        it
+      }
+      bib
+    }
+    hide("white page")
+  }
 }
