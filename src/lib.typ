@@ -358,7 +358,6 @@
   }
 
   // backmatter context
-  set heading(level: 2, supplement: [Backmatter])
   context {
     // calculate page numbering for back matter
     counter(page).update(counter(page).at(<end-front-matter>).first())
@@ -383,8 +382,9 @@
       }
       bib
     }
-
+    
     if (a() != none) {
+      pagebreak(to: "even")
       // appendices
       set heading(numbering: none, supplement: [Appendix])
       [
