@@ -1,6 +1,7 @@
 #import "@preview/hydra:0.5.1": hydra
 #import "@preview/acrostiche:0.5.1": *
 #import "@preview/codly:1.0.0": *
+#import "@preview/codly-languages:0.1.1": *
 
 #let small-line = line(length: 100%, stroke: 0.045em)
 
@@ -34,6 +35,7 @@
   enable-acronyms: false,
   enable-lof: false,
   enable-lot: false,
+  enable-lol: false,
   enable-twoside: false,
   enable-colored-links: false,
   link-color: rgb("#005D7E"),
@@ -120,7 +122,7 @@
     zebra-fill: white,
     breakable: true,
     reference-sep: ", line ",
-    default-color: rgb("#7d7d7d"),
+    languages: codly-languages,
   )
 
 
@@ -224,7 +226,7 @@
     )
   }
 
-  // List of Table
+  // List of Tables
   if enable-lot {
     pagebreak()
     {
@@ -234,6 +236,20 @@
     outline(
       title: [List of Tables],
       target: figure.where(kind: table),
+      indent: auto,
+    )
+  }
+
+  // List of Listings
+  if enable-lol {
+    pagebreak()
+    {
+      show heading: none
+      heading[List of Listings]
+    }
+    outline(
+      title: [List of Listings],
+      target: figure.where(kind: raw),
       indent: auto,
     )
   }
