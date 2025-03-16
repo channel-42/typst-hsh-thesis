@@ -15,6 +15,9 @@
   return query(heading.where(level: 1)).filter(it => here().page() == it.location().page()).len() > 0
 }
 
+#let appendix = state("appendix", none)
+#let a() = appendix.get()
+
 #show par: it => [#it <meta:content>]
 
 #let project(
@@ -65,7 +68,7 @@
     }
 
     // Only color the number, not the supplement.
-    show regex("[\d.]+"): set text(fill: link-color) if enable-colored-links
+    show regex("[A-Za-z]?\.*\d+"): set text(fill: link-color) if enable-colored-links
     it
   }
 
@@ -354,17 +357,19 @@
     pagebreak(to: "even")
   }
 
-  // calculate page numbering for back matter
+  // backmatter context
+  set heading(level: 2, supplement: [Backmatter])
   context {
+    // calculate page numbering for back matter
     counter(page).update(counter(page).at(<end-front-matter>).first())
 
     set page(
+      numbering: "I",
       header: none,
       footer: context {
         align(center, counter(page).display("I"))
       },
     )
-    set page(numbering: "I")
 
     // bibliography
     if bib != none {
@@ -378,6 +383,22 @@
       }
       bib
     }
+
+    if (a() != none) {
+      // appendices
+      set heading(numbering: none, supplement: [Appendix])
+      [
+        = Appendix
+      ]
+      counter(heading).update(1)
+      set heading(numbering: "A.1")
+      [
+        #show heading: set heading(supplement: [Appendix])
+        #a()
+      ]
+    }
+
     hide("white page")
   }
 }
+
