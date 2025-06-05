@@ -38,6 +38,9 @@
   enable-lol: false,
   enable-twoside: false,
   enable-colored-links: false,
+  enable-overview-of-aids: false,
+  // table in the form of (Aid, Used for)
+  overview-of-aids: none,
   link-color: rgb("#005D7E"),
   bib: none,
   chapter-break-mode: "default",
@@ -183,6 +186,7 @@
     #align(center, text("Statement of Authorship", weight: "bold"))
     I hereby declare that I have written the submitted thesis independently and without external assistance, that I have not used any sources or aids other than those specified by me, and that I have clearly marked any passages taken verbatim or in substance from the sources used.
 
+    If AI tools were used (as aids), I am responsible for the selection, adoption and all results of the AI-generated parts used by me. This applies in particular to any potential AI-generated plagiarism. I have named all AI tools used with their respective product names in the "Overview of used Aids" section.
 
     #v(5.2em, weak: true)
 
@@ -398,7 +402,28 @@
       }
       bib
     }
-    
+    // overview of aids
+    if enable-overview-of-aids and overview-of-aids != none {
+      set heading(numbering: none)
+      pagebreak()
+      [
+        = Overview of Aids
+        #table(
+          columns: (1fr, 3fr),
+          align: top,
+          stroke: (_, y) => (
+            top: if y <= 1 { 1pt } else { 0pt },
+            bottom: 1pt,
+          ),
+          table.header(
+            text("Aid", weight: "bold"),
+            text("Used for", weight: "bold"),
+          ),
+          ..overview-of-aids.flatten()
+        )
+      ]
+    }
+
     if (a() != none) {
       pagebreak(to: "even")
       // appendices
@@ -417,4 +442,5 @@
     hide("white page")
   }
 }
+
 
