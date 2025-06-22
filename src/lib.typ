@@ -22,10 +22,6 @@
   return query(heading.where(level: 1)).filter(it => next-page == it.location().page()).len() > 0
 }
 
-#let is-start-chapter() = {
-  let is-start-chapter = query(heading.where(level: 1)).map(it => it.location().page()).contains(page)
-}
-
 #let page-has-no-content() = {
   let page = here().page()
   let is-start-chapter = query(heading.where(level: 1)).map(it => it.location().page()).contains(page)
