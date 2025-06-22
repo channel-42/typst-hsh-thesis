@@ -4,6 +4,7 @@
 #import "@preview/codly-languages:0.1.1": *
 
 #let small-line = line(length: 100%, stroke: 0.045em)
+#let content-pages = state("content-pages", ())
 
 #let get-current-heading-hydra(top-level: false) = {
   if (top-level) {
@@ -15,6 +16,22 @@
 #let page-has-h1-heading() = {
   return query(heading.where(level: 1)).filter(it => here().page() == it.location().page()).len() > 0
 }
+
+#let next-page-has-h1-heading() = {
+  let next-page = here().page() + 1
+  return query(heading.where(level: 1)).filter(it => next-page == it.location().page()).len() > 0
+}
+
+#let is-start-chapter() = {
+  let is-start-chapter = query(heading.where(level: 1)).map(it => it.location().page()).contains(page)
+}
+
+#let page-has-no-content() = {
+  let page = here().page()
+  let is-start-chapter = query(heading.where(level: 1)).map(it => it.location().page()).contains(page)
+  return not state("content.switch", false).get() and not is-start-chapter
+}
+
 
 #let appendix = state("appendix", none)
 #let a() = appendix.get()
@@ -283,10 +300,12 @@
       ) <acronyms>
 
     ]
+    pagebreak()
   }
 
   if enable-twoside {
-    pagebreak(to: "even")
+    set page(numbering: none)
+    pagebreak(to: "odd")
   }
 
   // empty content block to store label for the start of the body
@@ -302,6 +321,15 @@
       }
 
       if enable-twoside {
+        if next-page-has-h1-heading() and page-has-no-content() {
+          return
+        }
+        let page = here().page()
+        state("content.pages", (0,)).update(it => {
+          it.push(page)
+          return it
+        })
+
         if calc.even(here().page()) {
           align(left, emph(get-current-heading-hydra(top-level: false)))
         } else {
@@ -320,13 +348,14 @@
   set page(
     footer: context {
       // dont print a small-line on pages with a level 1 heading
-      if not page-has-h1-heading() {
-        small-line
-      }
-
       if enable-twoside {
+        let has-content = state("content.pages", (0,)).get().contains(here().page())
+
         if calc.even(here().page()) {
-          if not page-has-h1-heading() {
+          if not page-has-h1-heading() and has-content {
+            small-line
+          }
+          if not page-has-h1-heading() and has-content {
             grid(
               columns: 2,
               gutter: 1fr,
@@ -336,9 +365,17 @@
             align(left, counter(page).display("1"))
           }
         } else {
+          if not page-has-h1-heading() and has-content {
+            small-line
+          }
           align(right, counter(page).display("1"))
         }
       } else {
+        if page-has-h1-heading() {
+          return
+        }
+
+        small-line
         grid(
           columns: 2,
           gutter: 1fr,
@@ -356,7 +393,9 @@
     }
     if chapter-break-mode == "recto" {
       //level 1 heading always starts on an empty, right page
+      state("content.switch").update(false)
       pagebreak(weak: true, to: "odd")
+      state("content.switch").update(true)
     }
     if chapter-break-mode == "next-page" {
       //level 1 heading always starts on an empty page
@@ -374,7 +413,12 @@
   body
 
   if (enable-twoside) {
-    pagebreak(to: "even")
+    if chapter-break-mode == "recto" {
+    set page(numbering: none, header: none, footer: none)
+    pagebreak(to: "odd")
+    } else {
+      pagebreak(to: "even")
+    }
   }
 
   // backmatter context
@@ -405,7 +449,11 @@
     // overview of aids
     if enable-overview-of-aids and overview-of-aids != none {
       set heading(numbering: none)
-      pagebreak()
+      if chapter-break-mode == "recto" {
+        pagebreak(to: "odd")
+      } else {
+        pagebreak(to: "even")
+      }
       [
         = Overview of Aids
         #table(
@@ -425,7 +473,11 @@
     }
 
     if (a() != none) {
-      pagebreak(to: "even")
+      if chapter-break-mode == "recto" {
+        pagebreak(to: "odd")
+      } else {
+        pagebreak(to: "even")
+      }
       // appendices
       set heading(numbering: none, supplement: [Appendix])
       [
@@ -442,5 +494,6 @@
     hide("white page")
   }
 }
+
 
 
