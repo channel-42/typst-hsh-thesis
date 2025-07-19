@@ -6,6 +6,14 @@
 #let small-line = line(length: 100%, stroke: 0.045em)
 #let content-pages = state("content-pages", ())
 
+// allow figure two have two caption styles (one for inline, one for outline)
+// similar to the latex feature
+#let in-outline = state("in-outline", false)
+
+#let flex-caption(short: none, long: none) = context {
+  if state("in-outline", false).get() { short } else { long }
+}
+
 #let get-current-heading-hydra(top-level: false) = {
   if (top-level) {
     return hydra(1)
@@ -214,6 +222,15 @@
   if enable-twoside {
     pagebreak()
   }
+
+  // allow figure two have two caption styles (one for inline, one for outline)
+  // similar to the latex feature
+  show outline: it => {
+    in-outline.update(true)
+    it
+    in-outline.update(false)
+  }
+
   // Table of contents.
   show outline.entry.where(level: 1): it => {
     if (it.element.has("level")) {
