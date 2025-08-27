@@ -310,6 +310,9 @@
       #print-index(
         title: "Acronyms",
         outlined: true,
+        sorted: "up",
+        delimiter: "",
+        row-gutter: 0.65em,
       ) <acronyms>
 
     ]
