@@ -1,7 +1,7 @@
-#import "@preview/hydra:0.5.1": hydra
-#import "@preview/acrostiche:0.5.1": *
-#import "@preview/codly:1.0.0": *
-#import "@preview/codly-languages:0.1.1": *
+#import "@preview/hydra:0.6.2": hydra
+#import "@preview/acrostiche:0.6.0": *
+#import "@preview/codly:1.3.0": *
+#import "@preview/codly-languages:0.1.8": *
 
 #let small-line = line(length: 100%, stroke: 0.045em)
 #let content-pages = state("content-pages", ())
