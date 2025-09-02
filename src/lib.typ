@@ -200,7 +200,7 @@
     text("Author:", weight: "bold"),
     [#author\
       #link("mailto:" + author-email)\
-      matriculate-number: #matriculate-number
+      matriculate number: #matriculate-number
     ],
 
     text("First Examiner:", weight: "bold"), prof,
@@ -514,6 +514,3 @@
     hide("white page")
   }
 }
-
-
-
