@@ -140,6 +140,10 @@
     }
   }
 
+  show figure.where(
+    kind: table,
+  ): set figure.caption(position: top)
+
   show: codly-init.with()
   show figure: set block(breakable: true)
   codly(
