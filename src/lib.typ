@@ -144,6 +144,21 @@
     kind: table,
   ): set figure.caption(position: top)
 
+  // hanging captions for long caption entries
+  show figure.caption: it => context {
+    let supplement = it.supplement
+    let counter = it.counter
+    let body = it.body
+    align(center)[
+      #grid(
+        columns: (auto, auto),
+        column-gutter: 0.4em,
+        [#supplement #counter.get().at(0):],
+        [#set align(left);#body]
+      )
+    ]
+  }
+
   show: codly-init.with()
   show figure: set block(breakable: true)
   codly(
