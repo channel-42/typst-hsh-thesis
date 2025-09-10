@@ -156,6 +156,7 @@
     let body = it.body
     align(center)[
       #grid(
+        align: top,
         columns: (auto, auto),
         column-gutter: 0.4em,
         [#supplement #counter.get().at(0):],
