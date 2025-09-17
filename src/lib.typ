@@ -98,10 +98,7 @@
     it
   }
 
-  show footnote: it => {
-    show regex("\\d+"): set text(fill: link-color) if enable-colored-links
-    it
-  }
+  show footnote: set text(fill: link-color) if enable-colored-links
 
   // heading size
   show heading.where(level: 1): it => pad(bottom: 1.5em)[
@@ -450,6 +447,7 @@
   set page(numbering: "1", number-align: center)
   counter(page).update(1)
   set heading(numbering: "1.1")
+  show link: set text(fill: link-color) if enable-colored-links
 
   body
 
