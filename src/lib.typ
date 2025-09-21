@@ -94,7 +94,7 @@
     }
 
     // Only color the number, not the supplement.
-    show regex("[A-Za-z]?\.*\d+"): set text(fill: link-color) if enable-colored-links
+    show regex("[A-Za-z]?\.*\d+[a-z]?"): set text(fill: link-color) if enable-colored-links
     it
   }
 
