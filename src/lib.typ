@@ -64,6 +64,7 @@
   overview-of-aids: none,
   link-color: rgb("#005D7E"),
   bib: none,
+  abstract: none,
   chapter-break-mode: "default",
   language: "de",
   font: "Arial",
@@ -243,6 +244,15 @@
   pagebreak()
   if enable-twoside {
     pagebreak()
+  }
+
+  if abstract != none {
+    heading(outlined: false)[Abstract]
+    abstract
+    pagebreak()
+    if enable-twoside {
+      pagebreak()
+    }
   }
 
   // allow figure two have two caption styles (one for inline, one for outline)
