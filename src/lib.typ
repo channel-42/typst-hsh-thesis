@@ -457,7 +457,6 @@
   set page(numbering: "1", number-align: center)
   counter(page).update(1)
   set heading(numbering: "1.1")
-  show link: set text(fill: link-color) if enable-colored-links
 
   body
 
