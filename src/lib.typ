@@ -247,7 +247,7 @@
   }
 
   if abstract != none {
-    heading(outlined: false)[Abstract]
+    align(center, text("Abstract", weight: "bold"))
     abstract
     pagebreak()
     if enable-twoside {
