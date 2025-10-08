@@ -230,7 +230,7 @@
     #align(center, text("Statement of Authorship", weight: "bold"))
     I hereby declare that I have written the submitted thesis independently and without external assistance, that I have not used any sources or aids other than those specified by me, and that I have clearly marked any passages taken verbatim or in substance from the sources used.
 
-    If AI tools were used (as aids), I am responsible for the selection, adoption and all results of the AI-generated parts used by me. This applies in particular to any potential AI-generated plagiarism. I have named all AI tools used with their respective product names in the "Overview of used Aids" section.
+    If AI tools were used (as aids), I am responsible for the selection, adoption, and all results of the AI-generated parts used by me. This applies in particular to any potential AI-generated plagiarism. I have named all AI tools used with their respective product names in the "Overview of Aids" section.
 
     #v(5.2em, weak: true)
 
