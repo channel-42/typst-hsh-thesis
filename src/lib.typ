@@ -237,7 +237,7 @@
     #grid(
       columns: (auto, 4fr),
       gutter: 13pt,
-      [Hanover, #date], align(right)[Signature],
+      [Hannover, #date], align(right)[Signature],
     )
   ]
 
